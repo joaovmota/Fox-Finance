@@ -4,6 +4,8 @@ import { Toaster, toast } from "sonner";
 import { AppShell } from "@/components/layout/AppShell";
 import FoundationHome from "@/pages/FoundationHome";
 import ModulePlaceholder from "@/pages/ModulePlaceholder";
+import AuthPage from "@/pages/AuthPage";
+import { ProtectedRoute } from "@/app/routes/ProtectedRoute";
 import "@/App.css";
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
       <BrowserRouter>
         <AppShell theme={theme} onToggleTheme={toggleTheme}>
           <Routes>
+            <Route path="/login" element={<AuthPage />} />
+            <Route path="/signup" element={<AuthPage mode="signup" />} />
             <Route path="/" element={<FoundationHome />} />
             <Route path="/timeline" element={<ModulePlaceholder title="Timeline" eyebrow="Movimentações" icon="activity" />} />
             <Route path="/people" element={<ModulePlaceholder title="Pessoas" eyebrow="Organização" icon="users" />} />
@@ -30,6 +34,9 @@ function App() {
             <Route path="/goals" element={<ModulePlaceholder title="Objetivos" eyebrow="Próximo passo" icon="target" />} />
             <Route path="/investments" element={<ModulePlaceholder title="Investimentos" eyebrow="Próximo passo" icon="chart-no-axes-combined" />} />
             <Route path="/reports" element={<ModulePlaceholder title="Relatórios" eyebrow="Próximo passo" icon="file-chart-column" />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/secure-preview" element={<ModulePlaceholder title="Área protegida" />} />
+            </Route>
             <Route path="*" element={<ModulePlaceholder title="Página não encontrada" eyebrow="Erro" icon="circle-alert" error />} />
           </Routes>
         </AppShell>
