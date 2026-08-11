@@ -1,0 +1,42 @@
+import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster, toast } from "sonner";
+import { AppShell } from "@/components/layout/AppShell";
+import FoundationHome from "@/pages/FoundationHome";
+import ModulePlaceholder from "@/pages/ModulePlaceholder";
+import "@/App.css";
+
+function App() {
+  const [theme, setTheme] = useState("dark");
+
+  const toggleTheme = () => {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+    toast.success(nextTheme === "dark" ? "Tema escuro ativado" : "Tema claro ativado", {
+      id: "theme-toast",
+    });
+  };
+
+  return (
+    <div className={`fox-app ${theme}`} data-testid="fox-app">
+      <BrowserRouter>
+        <AppShell theme={theme} onToggleTheme={toggleTheme}>
+          <Routes>
+            <Route path="/" element={<FoundationHome />} />
+            <Route path="/timeline" element={<ModulePlaceholder title="Timeline" eyebrow="Movimentações" icon="activity" />} />
+            <Route path="/people" element={<ModulePlaceholder title="Pessoas" eyebrow="Organização" icon="users" />} />
+            <Route path="/cards" element={<ModulePlaceholder title="Cartões" eyebrow="Organização" icon="credit-card" />} />
+            <Route path="/planning" element={<ModulePlaceholder title="Planejamento" eyebrow="Próximo passo" icon="calendar-days" />} />
+            <Route path="/goals" element={<ModulePlaceholder title="Objetivos" eyebrow="Próximo passo" icon="target" />} />
+            <Route path="/investments" element={<ModulePlaceholder title="Investimentos" eyebrow="Próximo passo" icon="chart-no-axes-combined" />} />
+            <Route path="/reports" element={<ModulePlaceholder title="Relatórios" eyebrow="Próximo passo" icon="file-chart-column" />} />
+            <Route path="*" element={<ModulePlaceholder title="Página não encontrada" eyebrow="Erro" icon="circle-alert" error />} />
+          </Routes>
+        </AppShell>
+      </BrowserRouter>
+      <Toaster position="top-center" richColors theme={theme} closeButton />
+    </div>
+  );
+}
+
+export default App;
