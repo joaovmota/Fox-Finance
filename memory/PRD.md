@@ -42,6 +42,13 @@ Construir incrementalmente o Fox — aplicativo de controle financeiro pessoal. 
 - Documentação em `docs/architecture` e `docs/database`.
 - Testes: build/lint, endpoint público Supabase, migration remota, RLS estrutural, autenticação visual, rota protegida, mobile overflow e segurança estática.
 
+## Incremento do Dashboard
+- Adicionados quatro atalhos abaixo do saldo: Despesa, Receita, Cartão e Invest.
+- Formulários mockados com valor, descrição, conta, categoria, data, recorrência e meios de pagamento.
+- Cartão possui seleção de cartão, débito/crédito e parcelas de 1x a 5x ou quantidade manual.
+- Categoria Terceiros abre vínculo com pessoa existente ou criação local, distinguindo a receber e a pagar.
+- Nenhum formulário grava no Supabase ainda; persistência será ligada no próximo incremento após validação da experiência.
+
 ## Backlog priorizado
 ### P0
 - Criar usuário de teste dedicado e validar RLS com dois usuários reais em ambiente seguro.
@@ -50,6 +57,7 @@ Construir incrementalmente o Fox — aplicativo de controle financeiro pessoal. 
 ### P1
 - Transformar placeholders em módulos com dados reais sem alterar o App Shell.
 - Adicionar testes automatizados de repository e policies via ambiente de teste.
+- Persistir lançamentos dos atalhos e gerar parcelas/faturas de cartão de forma atômica.
 
 ### P2
 - Notificações, IA financeira, integrações externas, pagamentos e relatórios avançados.

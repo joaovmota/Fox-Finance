@@ -1,0 +1,31 @@
+{
+  "summary": "Frontend-only regression of Fox dashboard quick-entry flows completed on desktop and 390px mobile. Shortcuts, modal forms, third-party person linking, card installments, investment modal, close behavior, mock-only submit behavior, and mobile overflow passed; recurrence is missing from expense and income.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {
+        "flow": "Despesa/Receita quick entry",
+        "issue": "The requested recurrence field/control is absent from both forms.",
+        "affected_selectors": ["[data-testid='expense-entry-form']", "[data-testid='income-entry-form']"]
+      }
+    ],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/test_reports/iteration_3.json"],
+  "action_items": ["Add a recurrence control to expense and income forms, with the requested recurrence options, while keeping the values MOCKED/local-only.", "Re-run the quick-entry regression after adding recurrence controls."],
+  "critical_code_review_comments": ["QuickEntryModal conditionally renders card recurrence only; expense and income have no recurrence state or field despite the product requirement."],
+  "updated_files": ["/app/test_reports/iteration_3.json"],
+  "success_rate": {
+    "backend": "N/A (frontend-only request)",
+    "frontend": "90%"
+  },
+  "seed_data_creation": "No seed data created. Fabiane and local person tests used frontend MOCKS only.",
+  "retest_needed": true,
+  "should_call_test_agent_after_fix": true,
+  "context_for_next_testing_agent": "Public URL https://fox-ui-core.preview.emergentagent.com tested. All four shortcuts opened and closed. Expense required controls, income equivalent controls, Terceiros→Fabiane and local person linking, payable relationship, card debit/credit plus 5x/custom installments, investment controls, no horizontal overflow, and no API/Supabase write on submit passed. Recurrence selectors were absent for expense and income.",
+  "rca of the issue": "QuickEntryModal.jsx defines no recurrence state or field for expense/income. The only recurrence JSX is guarded by isCard, so the rendered forms cannot capture recurrence for the two required transaction types."
+}

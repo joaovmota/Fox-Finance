@@ -7,3 +7,11 @@ export const foundationMock = {
     { label: "Mercado do bairro", detail: "Ontem, 18:16", value: "− R$ 184,70", type: "negative", icon: "shopping-bag" },
   ],
 };
+
+export const entryMockOptions = {
+  accounts: ["Conta principal", "Carteira", "Conta digital"],
+  cards: ["Nubank •••• 4821", "Inter •••• 9034"],
+  categories: ["Alimentação", "Transporte", "Moradia", "Lazer", "Terceiros"],
+  people: ["Fabiane", "Marcos", "Ana Paula"],
+  paymentMethods: ["Pix", "Dinheiro", "Débito", "Outro"],
+};
