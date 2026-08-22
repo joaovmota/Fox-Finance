@@ -1,4 +1,4 @@
-.fox-app { min-height: 100vh; background: var(--fox-ink); transition: background-color .25s ease, color .25s ease; }
+.fox-app { min-height: 100vh; color: var(--fox-text); background: var(--fox-ink); transition: background-color .25s ease, color .25s ease; }
 .fox-page { width: min(100%, 1180px); margin: 0 auto; padding: 28px 24px 120px; }
 .fox-eyebrow { color: var(--fox-primary); font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
 .fox-display { margin: 0; letter-spacing: -.045em; line-height: 1.05; }
