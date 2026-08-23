@@ -48,6 +48,8 @@ Construir incrementalmente o Fox — aplicativo de controle financeiro pessoal. 
 - Cartão possui seleção de cartão, débito/crédito e parcelas de 1x a 5x ou quantidade manual.
 - Categoria Terceiros abre vínculo com pessoa existente ou criação local, distinguindo a receber e a pagar.
 - Nenhum formulário grava no Supabase ainda; persistência será ligada no próximo incremento após validação da experiência.
+- Modal reformulado conforme protótipo: abas de movimentação, valor com máscara BRL, layout compacto, scroll interno e bloqueio do scroll do dashboard.
+- FAB central agora abre o mesmo modal de Nova movimentação, iniciando em Despesa.
 
 ## Backlog priorizado
 ### P0

@@ -1,4 +1,7 @@
+import { useEffect } from "react";
 import { LoaderCircle, X } from "lucide-react";
+
+let modalDepth = 0;
 
 export function Button({ children, variant = "primary", loading = false, ...props }) {
   return <button className={`fox-button fox-button-${variant}`} disabled={loading || props.disabled} {...props}>
@@ -26,4 +29,8 @@ export function ProgressBar({ value }) { return <div className="fox-progress" ro
 export function Skeleton({ className = "" }) { return <div className={`fox-skeleton ${className}`} aria-label="Carregando" data-testid="loading-skeleton" />; }
 export function EmptyState({ title, description, action }) { return <div className="fox-empty" data-testid="empty-state"><div className="fox-empty-icon">∅</div><h3>{title}</h3><p>{description}</p>{action}</div>; }
 export function ErrorState({ title = "Algo não saiu como esperado", description = "Tente novamente em alguns instantes." }) { return <div className="fox-empty fox-error" role="alert" data-testid="error-state"><div className="fox-empty-icon">!</div><h3>{title}</h3><p>{description}</p><Button variant="secondary" onClick={() => window.location.reload()} data-testid="error-retry-button">Tentar novamente</Button></div>; }
-export function Modal({ title, children, onClose, testId = "placeholder-modal", titleId = "modal-title" }) { const closeTestId = testId === "placeholder-modal" ? "modal-close-button" : `${testId}-close-button`; return <div className="fox-modal-backdrop" role="presentation"><div className="fox-modal" role="dialog" aria-modal="true" aria-labelledby={titleId} data-testid={testId}><div className="fox-modal-header"><h2 id={titleId}>{title}</h2><IconButton label="Fechar" onClick={onClose} data-testid={closeTestId}><X size={18} /></IconButton></div>{children}</div></div>; }
+export function Modal({ title, children, onClose, testId = "placeholder-modal", titleId = "modal-title" }) {
+  const closeTestId = testId === "placeholder-modal" ? "modal-close-button" : `${testId}-close-button`;
+  useEffect(() => { modalDepth += 1; const previousOverflow = document.body.style.overflow; document.body.style.overflow = "hidden"; return () => { modalDepth -= 1; if (modalDepth === 0) document.body.style.overflow = previousOverflow; }; }, []);
+  return <div className="fox-modal-backdrop" role="presentation"><div className="fox-modal" role="dialog" aria-modal="true" aria-labelledby={titleId} data-testid={testId}><div className="fox-modal-header"><h2 id={titleId}>{title}</h2><IconButton label="Fechar" onClick={onClose} data-testid={closeTestId}><X size={18} /></IconButton></div>{children}</div></div>;
+}
