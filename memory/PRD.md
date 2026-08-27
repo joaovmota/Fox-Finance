@@ -51,6 +51,12 @@ Construir incrementalmente o Fox — aplicativo de controle financeiro pessoal. 
 - Modal reformulado conforme protótipo: abas de movimentação, valor com máscara BRL, layout compacto, scroll interno e bloqueio do scroll do dashboard.
 - FAB central agora abre o mesmo modal de Nova movimentação, iniciando em Despesa.
 
+## Módulo Pessoas — interface inicial
+- Rota `/people` com totais A RECEBER/A PAGAR, busca, lista de contatos e cadastro mockado.
+- Rota `/people/:personId` com avatar, situação financeira, ações de recebimento/pagamento, pendentes, histórico e detalhes de cartão.
+- Dados de Pessoas preparados em `src/lib/peopleMocks.js` para posterior troca por repositories do Supabase.
+- Barra inferior reorganizada com coluna estrutural exclusiva para o FAB; Cartões não intercepta mais cliques no mobile.
+
 ## Backlog priorizado
 ### P0
 - Criar usuário de teste dedicado e validar RLS com dois usuários reais em ambiente seguro.

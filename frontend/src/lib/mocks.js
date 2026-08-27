@@ -15,3 +15,10 @@ export const entryMockOptions = {
   people: ["Fabiane", "Marcos", "Ana Paula"],
   paymentMethods: ["Pix", "Dinheiro", "Débito", "Outro"],
 };
+
+export const timelineMock = [
+  { id: "ramen", date: "Terça-feira, 4 de agosto", name: "Ramen Boa Vista", category: "Alimentação", description: "Jantar", time: "13:20", value: "− R$ 68,50", type: "expense", icon: "food", recurring: false },
+  { id: "uber", date: "Terça-feira, 4 de agosto", name: "Uber", category: "Transporte", description: "Nubank", time: "10:05", value: "− R$ 24,90", type: "expense", icon: "transport", recurring: false },
+  { id: "salary", date: "Segunda-feira, 3 de agosto", name: "Salário Acme Corp", category: "Salário", description: "Receita mensal", time: "09:00", value: "+ R$ 9.800,00", type: "income", icon: "work", recurring: true },
+  { id: "enel", date: "Segunda-feira, 3 de agosto", name: "ENEL Energia", category: "Utilidades", description: "Conta de luz", time: "08:30", value: "− R$ 189,40", type: "expense", icon: "utility", recurring: true },
+];

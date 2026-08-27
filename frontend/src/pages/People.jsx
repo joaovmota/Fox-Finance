@@ -1,0 +1,18 @@
+import { useState } from "react";
+import { ArrowDownLeft, ArrowUpRight, Plus, Search, UserRound } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { Button, Card, Modal } from "@/components/ui/fox";
+import { peopleMock, peopleTotals } from "@/lib/peopleMocks";
+
+function Avatar({ initials }) { return <span className="people-avatar" aria-hidden="true">{initials}</span>; }
+
+export default function People() {
+  const navigate = useNavigate();
+  const [showAdd, setShowAdd] = useState(false);
+  const [summary, setSummary] = useState(null);
+  const [query, setQuery] = useState("");
+  const people = peopleMock.filter((person) => person.name.toLowerCase().includes(query.toLowerCase()));
+  const addPerson = (event) => { event.preventDefault(); setShowAdd(false); toast.success("Pessoa adicionada aos seus contatos (MOCK)"); };
+  return <div className="fox-page people-page"><section className="people-heading"><div><span className="fox-eyebrow">Organização</span><h1 className="fox-display">Pessoas</h1><span className="fox-muted">{peopleMock.length} contatos</span></div><button className="people-add-button" onClick={() => setShowAdd(true)} aria-label="Adicionar pessoa" data-testid="people-add-button"><Plus size={21} /></button></section><section className="people-totals"><button className="people-total-card receivable" onClick={() => setSummary("receivable")} data-testid="people-receivable-summary"><span>A RECEBER</span><strong>{peopleTotals.receivable}</strong></button><button className="people-total-card payable" onClick={() => setSummary("payable")} data-testid="people-payable-summary"><span>A PAGAR</span><strong>{peopleTotals.payable}</strong></button></section><label className="people-search"><Search size={17} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar pessoa" data-testid="people-search-input" /></label><Card className="people-list" data-testid="people-list">{people.map((person) => <button className="person-row" onClick={() => navigate(`/people/${person.id}`)} key={person.id} data-testid={`person-row-${person.id}`}><Avatar initials={person.initials} /><div className="person-row-copy"><strong>{person.name}</strong><span>{person.detail}</span></div><strong className={`person-row-value ${person.status}`}>{person.balance}</strong><span className="person-chevron">›</span></button>)}</Card>{showAdd && <Modal title="Adicionar pessoa" onClose={() => setShowAdd(false)} testId="add-person-modal" titleId="add-person-title"><form className="people-form" onSubmit={addPerson}><label>Nome completo<input required placeholder="Ex.: Marina Costa" data-testid="new-person-full-name-input" /></label><label>E-mail ou telefone<input placeholder="Opcional" data-testid="new-person-contact-input" /></label><Button type="submit" data-testid="save-person-button"><UserRound size={16} />Adicionar pessoa</Button></form></Modal>}{summary && <Modal title={summary === "receivable" ? "A receber" : "A pagar"} onClose={() => setSummary(null)} testId="people-summary-modal" titleId="people-summary-title"><div className="people-summary-list">{peopleMock.filter((person) => person.status === summary || (summary === "payable" && person.status === "payable")).map((person) => <button key={person.id} onClick={() => { setSummary(null); navigate(`/people/${person.id}`); }} data-testid={`summary-person-${person.id}`}><Avatar initials={person.initials} /><span>{person.name}</span><strong className={summary}>{person.balance}</strong></button>)}<p className="fox-muted">Valores de demonstração agrupados por pendência.</p></div></Modal>}</div>;
+}

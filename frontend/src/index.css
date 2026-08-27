@@ -40,6 +40,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
   --fox-surface-raised: #e3f1ed;
   --fox-border: rgba(13, 62, 59, 0.12);
   --fox-text: #102c2c;
-  --fox-muted: #52706c;
-  --fox-dim: #77918d;
+  --fox-muted: #3d5c58;
+  --fox-dim: #64807b;
 }
