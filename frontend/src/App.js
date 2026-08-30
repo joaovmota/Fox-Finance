@@ -9,6 +9,7 @@ import { ProtectedRoute } from "@/app/routes/ProtectedRoute";
 import Timeline from "@/pages/Timeline";
 import People from "@/pages/People";
 import PersonProfile from "@/pages/PersonProfile";
+import Cards from "@/pages/Cards";
 import "@/App.css";
 
 function App() {
@@ -33,7 +34,7 @@ function App() {
             <Route path="/timeline" element={<Timeline />} />
             <Route path="/people" element={<People />} />
             <Route path="/people/:personId" element={<PersonProfile />} />
-            <Route path="/cards" element={<ModulePlaceholder title="Cartões" eyebrow="Organização" icon="credit-card" />} />
+            <Route path="/cards" element={<Cards />} />
             <Route path="/planning" element={<ModulePlaceholder title="Planejamento" eyebrow="Próximo passo" icon="calendar-days" />} />
             <Route path="/goals" element={<ModulePlaceholder title="Objetivos" eyebrow="Próximo passo" icon="target" />} />
             <Route path="/investments" element={<ModulePlaceholder title="Investimentos" eyebrow="Próximo passo" icon="chart-no-axes-combined" />} />
