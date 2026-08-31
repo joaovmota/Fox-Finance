@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { CreditCard } from "lucide-react";
 import { Button, Modal } from "@/components/ui/fox";
 import { BankAutocomplete } from "@/components/ui/BankAutocomplete";
+import { BankLogo } from "@/components/ui/BankLogo";
 import { getBankTheme, identifyBank } from "@/lib/cardsLogic";
 import { toCents } from "@/lib/money";
 
@@ -77,11 +78,8 @@ export function AddCardModal({ onClose, onSubmit }) {
             <span style={{ color: theme.softText }}>BANCO</span>
             <strong>{form.bank || "Nome do banco"}</strong>
           </div>
-          <span
-            className="credit-card-chip"
-            style={{ background: "rgba(255,255,255,0.16)" }}
-          >
-            <CreditCard size={18} strokeWidth={2.2} />
+          <span className="credit-card-chip" aria-hidden="true">
+            <BankLogo bankId={brandKey} size={30} radius={9} showBackground={false} />
           </span>
           <div className="add-card-preview-number">
             •••• •••• •••• {form.lastFour.padStart(4, "•").slice(-4) || "••••"}

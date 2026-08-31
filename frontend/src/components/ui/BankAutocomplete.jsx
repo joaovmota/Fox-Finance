@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Building2, ChevronDown } from "lucide-react";
 import { suggestBanks } from "@/lib/banks";
+import { BankLogo } from "@/components/ui/BankLogo";
 
 /**
  * Autocomplete de bancos. Sugere fragmentos do catálogo estático em
@@ -110,12 +111,8 @@ export function BankAutocomplete({
                 data-testid={`${testId}-option-${bank.id}`}
                 aria-selected={focusedIndex === index}
               >
-                <span
-                  className="fox-bank-swatch"
-                  style={{ background: bank.cor, color: bank.corTexto }}
-                  aria-hidden="true"
-                >
-                  {bank.nome[0]}
+                <span className="fox-bank-swatch" aria-hidden="true">
+                  <BankLogo bank={bank} size={26} radius={7} />
                 </span>
                 <span className="fox-bank-name">{bank.nome}</span>
               </button>

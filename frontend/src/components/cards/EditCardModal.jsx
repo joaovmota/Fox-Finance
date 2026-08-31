@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Save } from "lucide-react";
 import { Button, Modal } from "@/components/ui/fox";
 import { BankAutocomplete } from "@/components/ui/BankAutocomplete";
+import { BankLogo } from "@/components/ui/BankLogo";
+import { DependentsManager } from "@/components/cards/DependentsManager";
 import { capitalizeWords } from "@/components/cards/AddCardModal";
 import { getBankTheme, identifyBank } from "@/lib/cardsLogic";
 import { formatBRL, toCents } from "@/lib/money";
@@ -29,6 +31,7 @@ export function EditCardModal({ card, onClose, onSubmit }) {
     }),
     closingDay: String(card.closingDay),
     dueDay: String(card.dueDay),
+    dependents: card.dependents || [],
   });
 
   useEffect(() => {
@@ -42,6 +45,7 @@ export function EditCardModal({ card, onClose, onSubmit }) {
       }),
       closingDay: String(card.closingDay),
       dueDay: String(card.dueDay),
+      dependents: card.dependents || [],
     });
   }, [card.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -69,6 +73,7 @@ export function EditCardModal({ card, onClose, onSubmit }) {
       limitTotal: toCents(form.limitTotal),
       closingDay: Number(form.closingDay),
       dueDay: Number(form.dueDay),
+      dependents: form.dependents,
     });
   };
 
@@ -89,6 +94,9 @@ export function EditCardModal({ card, onClose, onSubmit }) {
             <span style={{ color: theme.softText }}>BANCO</span>
             <strong>{form.bank || "Nome do banco"}</strong>
           </div>
+          <span className="credit-card-chip" aria-hidden="true">
+            <BankLogo bankId={brandKey} size={30} radius={9} showBackground={false} />
+          </span>
           <div className="add-card-preview-limit">
             <span style={{ color: theme.softText }}>LIMITE</span>
             <strong>{form.limitTotal ? `R$ ${form.limitTotal}` : "R$ 0,00"}</strong>
@@ -167,6 +175,11 @@ export function EditCardModal({ card, onClose, onSubmit }) {
         <span className="fox-muted edit-card-hint">
           Atual: {formatBRL(card.limitTotal)} · fechamento dia {card.closingDay} · vencimento dia {card.dueDay}
         </span>
+
+        <DependentsManager
+          dependents={form.dependents}
+          onChange={(next) => update({ dependents: next })}
+        />
 
         <Button type="submit" disabled={disabled} data-testid="save-edit-card-button">
           <Save size={16} />

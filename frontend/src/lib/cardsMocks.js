@@ -19,6 +19,10 @@ export const cardsMock = [
       rate: 1, // 1 pt por R$ 1
       balance: 8420, // saldo pré-existente (em unidade do programa)
     },
+    dependents: [
+      { id: "dep-mari", name: "Marina Souza", lastFour: "9832", active: true },
+      { id: "dep-luca", name: "Lucas Souza", lastFour: "1478", active: true },
+    ],
     transactions: [
       {
         id: "nu-1",
@@ -149,6 +153,7 @@ export const cardsMock = [
       rate: 2.5, // 2,5 milhas por R$ 1
       balance: 15600,
     },
+    dependents: [],
     transactions: [
       {
         id: "xp-1",

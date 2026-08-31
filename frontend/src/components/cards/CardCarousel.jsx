@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { CreditCard } from "lucide-react";
+import { Users } from "lucide-react";
+import { BankLogo } from "@/components/ui/BankLogo";
 import { calcUsagePercent, formatMaskedNumber, getBankTheme } from "@/lib/cardsLogic";
 import { calcCurrentInvoiceCents } from "@/lib/cardsLogic";
 import { formatBRL } from "@/lib/money";
@@ -34,6 +35,7 @@ export function CardCarousel({ cards, activeId, onActiveChange, now = new Date()
         const theme = getBankTheme(card.brandKey);
         const usage = calcUsagePercent(card);
         const invoiceCents = calcCurrentInvoiceCents(card, now);
+        const activeDependents = (card.dependents || []).filter((dep) => dep.active).length;
         return (
           <article
             key={card.id}
@@ -59,14 +61,24 @@ export function CardCarousel({ cards, activeId, onActiveChange, now = new Date()
                 </span>
                 <strong className="credit-card-bank">{card.bank}</strong>
               </div>
-              <span className="credit-card-chip" style={{ background: "rgba(255,255,255,0.16)" }}>
-                <CreditCard size={18} strokeWidth={2.2} />
+              <span className="credit-card-chip" aria-hidden="true">
+                <BankLogo bankId={card.brandKey} size={34} radius={9} showBackground={false} />
               </span>
             </header>
 
             <div className="credit-card-number" aria-label={`Cartão terminado em ${card.lastFour}`}>
               {formatMaskedNumber(card.lastFour)}
             </div>
+
+            {activeDependents > 0 && (
+              <span
+                className="credit-card-dependent-badge"
+                data-testid={`credit-card-dependents-${card.id}`}
+              >
+                <Users size={12} strokeWidth={2.4} />
+                +{activeDependents} {activeDependents === 1 ? "adicional" : "adicionais"}
+              </span>
+            )}
 
             <footer className="credit-card-foot">
               <div>
