@@ -10,12 +10,14 @@
   --fox-border: rgba(177, 236, 225, 0.12);
   --fox-primary: #50e3c2;
   --fox-primary-strong: #31c8a8;
+  --fox-primary-ink: #071315; /* Texto para uso SOBRE fundos --fox-primary; permanece escuro em ambos os temas */
   --fox-positive: #8fe18c;
   --fox-negative: #ff807c;
   --fox-warning: #f6c96d;
   --fox-text: #f4fbf8;
   --fox-muted: #8ea9a5;
   --fox-dim: #5e7b78;
+  --fox-range: rgba(80, 227, 194, 0.14);
   --radius: 14px;
 }
 
@@ -32,7 +34,7 @@ body {
 button, input { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 :focus-visible { outline: 2px solid var(--fox-primary); outline-offset: 3px; }
-::selection { color: var(--fox-ink); background: var(--fox-primary); }
+::selection { color: var(--fox-primary-ink); background: var(--fox-primary); }
 
 .light {
   --fox-ink: #f0f7f4;
@@ -42,4 +44,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   --fox-text: #102c2c;
   --fox-muted: #3d5c58;
   --fox-dim: #64807b;
+  --fox-primary: #14b892; /* Um pouco mais profundo para manter contraste em fundo claro sem perder o neon */
+  --fox-primary-strong: #0e9e7c;
+  --fox-primary-ink: #ffffff; /* Texto branco sobre botão neon em modo claro para preservar legibilidade */
+  --fox-range: rgba(20, 184, 146, 0.18);
 }

@@ -6,6 +6,7 @@ import { CardSummary } from "@/components/cards/CardSummary";
 import { CardDates } from "@/components/cards/CardDates";
 import { CardTransactions } from "@/components/cards/CardTransactions";
 import { CardActionsRow } from "@/components/cards/CardActionsRow";
+import { CategoryBreakdown } from "@/components/cards/CategoryBreakdown";
 import { AddCardModal } from "@/components/cards/AddCardModal";
 import { EditCardModal } from "@/components/cards/EditCardModal";
 import { DeleteCardDialog } from "@/components/cards/DeleteCardDialog";
@@ -118,6 +119,7 @@ export default function Cards() {
               />
               <CardDates card={activeCard} now={DEMO_NOW} />
               <RewardsCard card={activeCard} onToggle={handleRewardsToggle} />
+              <CategoryBreakdown card={activeCard} />
               <CardTransactions card={activeCard} />
             </>
           )}

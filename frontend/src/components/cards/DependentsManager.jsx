@@ -1,10 +1,39 @@
 import { useState } from "react";
 import { Trash2, UserPlus2, Users } from "lucide-react";
 import { capitalizeWords } from "@/components/cards/AddCardModal";
+import { AvatarPicker, DependentAvatar } from "@/components/cards/AvatarPicker";
 
-function DependentRow({ dependent, onToggle, onRemove }) {
+function initialsFor(name) {
+  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function DependentRow({ dependent, onChange, onToggle, onRemove }) {
+  const [pickerOpen, setPickerOpen] = useState(false);
   return (
     <li className="dependent-row" data-testid={`dependent-${dependent.id}`}>
+      <div className="dependent-avatar-wrapper">
+        <button
+          type="button"
+          className="dependent-avatar-button"
+          onClick={() => setPickerOpen((current) => !current)}
+          aria-label={`Editar avatar de ${dependent.name}`}
+          data-testid={`dependent-avatar-${dependent.id}`}
+        >
+          <DependentAvatar avatar={dependent.avatar} fallback={initialsFor(dependent.name)} />
+          <span className="dependent-avatar-edit" aria-hidden="true">✎</span>
+        </button>
+        {pickerOpen && (
+          <AvatarPicker
+            avatar={dependent.avatar}
+            dependentName={dependent.name}
+            onClose={() => setPickerOpen(false)}
+            onChange={(next) => onChange({ ...dependent, avatar: next })}
+          />
+        )}
+      </div>
       <div className="dependent-info">
         <strong>{dependent.name}</strong>
         <span className="fox-muted">final {dependent.lastFour}</span>
@@ -34,9 +63,8 @@ function DependentRow({ dependent, onToggle, onRemove }) {
 }
 
 /**
- * Gerenciador de cartões adicionais atrelados ao titular. Divide fatura com
- * dependentes (o limite total permanece no titular). Persiste alterações no
- * form do EditCardModal via `onChange`.
+ * Gerenciador de cartões adicionais. Permite adicionar/remover, pausar e
+ * agora também escolher avatar (emoji ou foto) para cada titular adicional.
  */
 export function DependentsManager({ dependents = [], onChange }) {
   const [showForm, setShowForm] = useState(false);
@@ -44,12 +72,12 @@ export function DependentsManager({ dependents = [], onChange }) {
   const [newLastFour, setNewLastFour] = useState("");
   const activeCount = dependents.filter((dep) => dep.active).length;
 
-  const toggle = (id) => {
-    onChange(
-      dependents.map((dep) => (dep.id === id ? { ...dep, active: !dep.active } : dep)),
-    );
+  const replace = (updated) => {
+    onChange(dependents.map((dep) => (dep.id === updated.id ? updated : dep)));
   };
-
+  const toggle = (id) => {
+    onChange(dependents.map((dep) => (dep.id === id ? { ...dep, active: !dep.active } : dep)));
+  };
   const remove = (id) => {
     onChange(dependents.filter((dep) => dep.id !== id));
   };
@@ -61,7 +89,7 @@ export function DependentsManager({ dependents = [], onChange }) {
     if (!name || lastFour.length !== 4) return;
     onChange([
       ...dependents,
-      { id: `dep-${Date.now()}`, name, lastFour, active: true },
+      { id: `dep-${Date.now()}`, name, lastFour, active: true, avatar: null },
     ]);
     setNewName("");
     setNewLastFour("");
@@ -101,6 +129,7 @@ export function DependentsManager({ dependents = [], onChange }) {
             <DependentRow
               key={dep.id}
               dependent={dep}
+              onChange={replace}
               onToggle={toggle}
               onRemove={remove}
             />

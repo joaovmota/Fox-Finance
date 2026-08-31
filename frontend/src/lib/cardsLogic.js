@@ -229,3 +229,39 @@ export function collectDueAlerts(cards, now = new Date(), thresholdDays = 3) {
     .map((card) => ({ card, proximity: getDayProximity(card.dueDay, now) }))
     .filter(({ proximity }) => proximity.diff !== null && proximity.diff <= thresholdDays);
 }
+
+// -------- Category breakdown --------
+
+export const CATEGORY_META = {
+  food: { label: "Alimentação", tone: "food", color: "#ff6b96" },
+  transport: { label: "Transporte", tone: "transport", color: "#65c7ff" },
+  health: { label: "Saúde", tone: "health", color: "#f6c96d" },
+  shopping: { label: "Compras", tone: "shopping", color: "#c5a4ff" },
+  travel: { label: "Viagem", tone: "travel", color: "#50e3c2" },
+  subscription: { label: "Assinaturas", tone: "subscription", color: "#8fe18c" },
+  utility: { label: "Utilidades", tone: "utility", color: "#f6c96d" },
+};
+
+export function getCategoryMeta(key) {
+  return CATEGORY_META[key] || { label: key || "Outros", tone: "default", color: "#8ea9a5" };
+}
+
+/**
+ * Retorna um resumo de gastos por categoria do cartão. Ordena por total
+ * decrescente e devolve `percent` (0-100) relativo ao total gasto no cartão.
+ */
+export function calcCategoryBreakdown(card) {
+  const totals = new Map();
+  let sum = 0;
+  for (const tx of card.transactions) {
+    totals.set(tx.category, (totals.get(tx.category) || 0) + tx.amount);
+    sum += tx.amount;
+  }
+  return Array.from(totals.entries())
+    .map(([category, cents]) => ({
+      category,
+      cents,
+      percent: sum ? Math.round((cents / sum) * 100) : 0,
+    }))
+    .sort((a, b) => b.cents - a.cents);
+}

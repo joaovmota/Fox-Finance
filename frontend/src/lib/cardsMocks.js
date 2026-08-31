@@ -20,8 +20,8 @@ export const cardsMock = [
       balance: 8420, // saldo pré-existente (em unidade do programa)
     },
     dependents: [
-      { id: "dep-mari", name: "Marina Souza", lastFour: "9832", active: true },
-      { id: "dep-luca", name: "Lucas Souza", lastFour: "1478", active: true },
+      { id: "dep-mari", name: "Marina Souza", lastFour: "9832", active: true, avatar: { type: "emoji", value: "👩" } },
+      { id: "dep-luca", name: "Lucas Souza", lastFour: "1478", active: true, avatar: { type: "emoji", value: "🐶" } },
     ],
     transactions: [
       {
