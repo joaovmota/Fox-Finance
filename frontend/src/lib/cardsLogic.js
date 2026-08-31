@@ -137,12 +137,10 @@ export function calcAvailableCents(card) {
   return Math.max(0, card.limitTotal - calcCommittedCents(card));
 }
 
-export function calcCurrentInvoiceCents(card) {
-  // MVP proxy: sum of the next open installment of each active transaction.
-  return card.transactions.reduce((sum, tx) => {
-    if (tx.installmentsPaid >= tx.installmentsTotal) return sum;
-    return sum + installmentAmountCents(tx);
-  }, 0);
+export function calcCurrentInvoiceCents(card, now = new Date()) {
+  const invoices = buildInvoices(card, now);
+  const open = invoices.find((invoice) => invoice.status === "open");
+  return open ? open.totalCents : 0;
 }
 
 export function calcUsagePercent(card) {
@@ -175,4 +173,122 @@ export function nextInstallmentInfo(tx) {
 
 export function formatMaskedNumber(lastFour = "0000") {
   return `•••• •••• •••• ${String(lastFour).padStart(4, "0").slice(-4)}`;
+}
+
+// -------- Invoice cycles --------
+
+const MONTH_LABELS = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
+
+function addMonths(year, month, delta) {
+  const total = year * 12 + month + delta;
+  return { year: Math.floor(total / 12), month: total % 12 };
+}
+
+function cycleKey(year, month) {
+  return `${year}-${String(month + 1).padStart(2, "0")}`;
+}
+
+function cycleLabel(year, month) {
+  return `${MONTH_LABELS[month]}/${year}`;
+}
+
+// Purchase cycle: if purchase date > closingDay, invoice closes the following month.
+function purchaseCycle(dateISO, closingDay) {
+  const date = new Date(`${dateISO}T00:00:00`);
+  const day = date.getDate();
+  const month = date.getMonth();
+  const year = date.getFullYear();
+  return day > closingDay ? addMonths(year, month, 1) : { year, month };
+}
+
+// Current cycle: cycle whose closing date is the next closingDay from `now`.
+function currentCycle(now, closingDay) {
+  const current = now.getDate();
+  const month = now.getMonth();
+  const year = now.getFullYear();
+  return current > closingDay ? addMonths(year, month, 1) : { year, month };
+}
+
+function statusFor(cycle, current) {
+  const cy = cycle.year * 12 + cycle.month;
+  const cur = current.year * 12 + current.month;
+  if (cy < cur) return "paid";
+  if (cy === cur) return "open";
+  return "future";
+}
+
+/**
+ * Build the list of invoices grouped by billing cycle. Includes all pending
+ * installments (installmentsPaid+1 .. installmentsTotal) and marks past cycles
+ * as "paid" so the user can browse the history.
+ */
+export function buildInvoices(card, now = new Date()) {
+  const buckets = new Map();
+  const current = currentCycle(now, card.closingDay);
+
+  for (const tx of card.transactions) {
+    const first = purchaseCycle(tx.dateISO, card.closingDay);
+    const perInstallment = Math.round(tx.amount / tx.installmentsTotal);
+    for (let k = 0; k < tx.installmentsTotal; k += 1) {
+      const cycle = addMonths(first.year, first.month, k);
+      const key = cycleKey(cycle.year, cycle.month);
+      if (!buckets.has(key)) {
+        buckets.set(key, {
+          key,
+          label: cycleLabel(cycle.year, cycle.month),
+          year: cycle.year,
+          month: cycle.month,
+          totalCents: 0,
+          items: [],
+        });
+      }
+      const bucket = buckets.get(key);
+      const isPaid = k < tx.installmentsPaid;
+      bucket.totalCents += perInstallment;
+      bucket.items.push({
+        id: `${tx.id}-${k + 1}`,
+        merchant: tx.merchant,
+        category: tx.category,
+        dateLabel: tx.dateLabel,
+        amountCents: perInstallment,
+        installmentCurrent: k + 1,
+        installmentTotal: tx.installmentsTotal,
+        paid: isPaid,
+      });
+    }
+  }
+
+  return Array.from(buckets.values())
+    .map((bucket) => ({ ...bucket, status: statusFor(bucket, current) }))
+    .sort((a, b) => a.year * 12 + a.month - (b.year * 12 + b.month));
+}
+
+// -------- Rewards --------
+
+export function calcRewardsAccrual(card) {
+  if (!card.rewards?.enabled) return 0;
+  const spentCents = card.transactions.reduce((sum, tx) => sum + tx.amount, 0);
+  const spentReais = spentCents / 100;
+  if (card.rewards.type === "cashback") {
+    // rate is a percentage — result in cents to stay consistent with money.js
+    return Math.round((spentCents * card.rewards.rate) / 100);
+  }
+  // points / miles — floor of rate * reais
+  return Math.floor(spentReais * card.rewards.rate);
+}
+
+export function formatRewardsValue(card, amount) {
+  if (!card.rewards) return "";
+  if (card.rewards.type === "cashback") {
+    return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(amount / 100);
+  }
+  return `${new Intl.NumberFormat("pt-BR").format(amount)} ${card.rewards.unit}`;
+}
+
+// -------- Due alerts --------
+
+export function collectDueAlerts(cards, now = new Date(), thresholdDays = 3) {
+  return cards
+    .map((card) => ({ card, proximity: getDayProximity(card.dueDay, now) }))
+    .filter(({ proximity }) => proximity.diff !== null && proximity.diff <= thresholdDays);
 }

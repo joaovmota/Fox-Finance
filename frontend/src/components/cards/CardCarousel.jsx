@@ -4,7 +4,7 @@ import { calcUsagePercent, formatMaskedNumber, getBankTheme } from "@/lib/cardsL
 import { calcCurrentInvoiceCents } from "@/lib/cardsLogic";
 import { formatBRL } from "@/lib/money";
 
-export function CardCarousel({ cards, activeId, onActiveChange }) {
+export function CardCarousel({ cards, activeId, onActiveChange, now = new Date() }) {
   const scrollerRef = useRef(null);
   const itemRefs = useRef({});
 
@@ -33,7 +33,7 @@ export function CardCarousel({ cards, activeId, onActiveChange }) {
       {cards.map((card) => {
         const theme = getBankTheme(card.brandKey);
         const usage = calcUsagePercent(card);
-        const invoiceCents = calcCurrentInvoiceCents(card);
+        const invoiceCents = calcCurrentInvoiceCents(card, now);
         return (
           <article
             key={card.id}

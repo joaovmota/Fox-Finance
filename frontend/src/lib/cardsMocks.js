@@ -11,13 +11,21 @@ export const cardsMock = [
     limitTotal: 800000, // R$ 8.000,00
     closingDay: 3,
     dueDay: 10,
+    rewards: {
+      enabled: true,
+      type: "points",
+      label: "Rewards Nubank",
+      unit: "pts",
+      rate: 1, // 1 pt por R$ 1
+      balance: 8420, // saldo pré-existente (em unidade do programa)
+    },
     transactions: [
       {
         id: "nu-1",
         merchant: "Ramen Boa Vista",
         category: "food",
         dateLabel: "5 ago",
-        dateISO: "2025-08-05",
+        dateISO: "2026-08-05",
         amount: 6850,
         installmentsTotal: 1,
         installmentsPaid: 0,
@@ -27,7 +35,7 @@ export const cardsMock = [
         merchant: "Uber",
         category: "transport",
         dateLabel: "5 ago",
-        dateISO: "2025-08-05",
+        dateISO: "2026-08-05",
         amount: 2490,
         installmentsTotal: 1,
         installmentsPaid: 0,
@@ -37,7 +45,7 @@ export const cardsMock = [
         merchant: "Drogasil",
         category: "health",
         dateLabel: "1 ago",
-        dateISO: "2025-08-01",
+        dateISO: "2026-08-01",
         amount: 8720,
         installmentsTotal: 1,
         installmentsPaid: 0,
@@ -47,7 +55,7 @@ export const cardsMock = [
         merchant: "Zara",
         category: "shopping",
         dateLabel: "31 jul",
-        dateISO: "2025-07-31",
+        dateISO: "2026-07-31",
         amount: 104970,
         installmentsTotal: 3,
         installmentsPaid: 0,
@@ -57,7 +65,7 @@ export const cardsMock = [
         merchant: "Netflix",
         category: "subscription",
         dateLabel: "28 jul",
-        dateISO: "2025-07-28",
+        dateISO: "2026-07-28",
         amount: 5590,
         installmentsTotal: 1,
         installmentsPaid: 0,
@@ -67,7 +75,7 @@ export const cardsMock = [
         merchant: "Kalunga",
         category: "shopping",
         dateLabel: "22 jul",
-        dateISO: "2025-07-22",
+        dateISO: "2026-07-22",
         amount: 47800,
         installmentsTotal: 4,
         installmentsPaid: 1,
@@ -83,13 +91,21 @@ export const cardsMock = [
     limitTotal: 500000, // R$ 5.000,00
     closingDay: 15,
     dueDay: 22,
+    rewards: {
+      enabled: true,
+      type: "cashback",
+      label: "Cashback Inter Loop",
+      unit: "BRL",
+      rate: 0.5, // 0,5% em cashback
+      balance: 4780, // R$ 47,80 acumulados (cents)
+    },
     transactions: [
       {
         id: "in-1",
         merchant: "iFood",
         category: "food",
         dateLabel: "6 ago",
-        dateISO: "2025-08-06",
+        dateISO: "2026-08-06",
         amount: 4290,
         installmentsTotal: 1,
         installmentsPaid: 0,
@@ -99,7 +115,7 @@ export const cardsMock = [
         merchant: "Posto Shell",
         category: "transport",
         dateLabel: "4 ago",
-        dateISO: "2025-08-04",
+        dateISO: "2026-08-04",
         amount: 18000,
         installmentsTotal: 1,
         installmentsPaid: 0,
@@ -109,7 +125,7 @@ export const cardsMock = [
         merchant: "Amazon",
         category: "shopping",
         dateLabel: "30 jul",
-        dateISO: "2025-07-30",
+        dateISO: "2026-07-30",
         amount: 89900,
         installmentsTotal: 6,
         installmentsPaid: 0,
@@ -125,13 +141,21 @@ export const cardsMock = [
     limitTotal: 1500000, // R$ 15.000,00
     closingDay: 20,
     dueDay: 28,
+    rewards: {
+      enabled: true,
+      type: "miles",
+      label: "XP Milhas Smiles",
+      unit: "milhas",
+      rate: 2.5, // 2,5 milhas por R$ 1
+      balance: 15600,
+    },
     transactions: [
       {
         id: "xp-1",
         merchant: "Latam Passagens",
         category: "travel",
         dateLabel: "2 ago",
-        dateISO: "2025-08-02",
+        dateISO: "2026-08-02",
         amount: 189000,
         installmentsTotal: 10,
         installmentsPaid: 2,
@@ -141,7 +165,7 @@ export const cardsMock = [
         merchant: "Apple Store",
         category: "shopping",
         dateLabel: "18 jul",
-        dateISO: "2025-07-18",
+        dateISO: "2026-07-18",
         amount: 599900,
         installmentsTotal: 12,
         installmentsPaid: 1,

@@ -5,9 +5,9 @@ import {
 } from "@/lib/cardsLogic";
 import { formatBRL } from "@/lib/money";
 
-export function CardSummary({ card }) {
+export function CardSummary({ card, now = new Date() }) {
   const available = calcAvailableCents(card);
-  const invoice = calcCurrentInvoiceCents(card);
+  const invoice = calcCurrentInvoiceCents(card, now);
   const usage = calcUsagePercent(card);
   return (
     <section className="fox-card cards-summary" data-testid="card-summary">
