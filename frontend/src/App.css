@@ -74,7 +74,7 @@
 .fox-fab { position: relative; display: grid; place-items: center; width: 56px; height: 56px; border: 5px solid var(--fox-ink); border-radius: 50%; color: var(--fox-ink); background: var(--fox-primary); cursor: pointer; box-shadow: 0 8px 24px rgba(80, 227, 194, .22); transition: transform .2s ease, background-color .2s ease; } .fox-fab:hover { background: var(--fox-primary-strong); transform: translateY(-3px); }
 .fox-modal-backdrop { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; overflow-y: auto; overscroll-behavior: contain; padding: 20px; background: rgba(4, 16, 17, .76); backdrop-filter: blur(8px); }
 .fox-modal { width: min(100%, 420px); max-height: calc(100dvh - 40px); overflow-y: auto; overscroll-behavior: contain; padding: 22px; border: 1px solid var(--fox-border); border-radius: var(--radius); background: var(--fox-surface); box-shadow: 0 20px 60px rgba(0,0,0,.3); animation: rise-in .25s both; scrollbar-color: var(--fox-primary) var(--fox-surface-raised); }
-.fox-modal-header { display: flex; align-items: center; justify-content: space-between; } .fox-modal-header h2 { margin: 0; font-size: 18px; } .fox-modal-copy { margin: 18px 0; color: var(--fox-muted); font-size: 13px; line-height: 1.6; }
+.fox-modal-header { display: flex; align-items: center; justify-content: space-between; } .fox-modal-header h2 { margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -.04em; line-height: 1.1; font-family: 'Inter', system-ui, sans-serif; } .fox-modal-copy { margin: 18px 0; color: var(--fox-muted); font-size: 13px; line-height: 1.6; }
 .fox-empty { display: grid; place-items: center; max-width: 420px; margin: 15vh auto 0; text-align: center; } .fox-empty-icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; color: var(--fox-primary); background: var(--fox-surface-raised); font-size: 24px; font-weight: 700; } .fox-empty h3 { margin: 18px 0 8px; font-size: 20px; } .fox-empty p { margin: 0 0 20px; color: var(--fox-muted); font-size: 13px; line-height: 1.6; } .fox-placeholder-top { margin-bottom: 30px; } .fox-back-button { display: inline-flex; align-items: center; gap: 7px; padding: 9px; font-size: 12px; }
 .fox-skeleton { height: 18px; border-radius: 6px; background: linear-gradient(90deg, var(--fox-surface-raised), var(--fox-surface), var(--fox-surface-raised)); background-size: 200% 100%; animation: shimmer 1.4s infinite; } @keyframes shimmer { to { background-position: -200% 0; } }
 .fox-auth-page { display: grid; min-height: calc(100vh - 72px); place-items: center; padding-bottom: 110px; } .fox-auth-card { width: min(100%, 430px); padding: 28px; } .fox-auth-card h1 { margin: 18px 0 8px; font-size: 32px; } .fox-auth-card > p { margin: 0 0 24px; font-size: 13px; } .fox-auth-form { display: grid; gap: 14px; } .fox-auth-form label { display: grid; gap: 7px; color: var(--fox-muted); font-size: 12px; } .fox-auth-form input { width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid var(--fox-border); border-radius: 9px; outline: 0; color: var(--fox-text); background: var(--fox-ink); } .fox-auth-form input:focus { border-color: var(--fox-primary); } .fox-auth-link { display: block; margin-top: 20px; color: var(--fox-primary); font-size: 12px; text-align: center; text-decoration: none; } .fox-auth-loading-line { width: 60%; margin-top: 12px; }
@@ -204,10 +204,13 @@
 .cards-action-btn.cards-action-danger:hover { border-color: var(--fox-negative); color: var(--fox-negative); }
 
 /* ----- Cards: edit / delete dialogs ----- */
-.fox-button-danger { color: #fff; background: var(--fox-negative); border-color: transparent; }
-.fox-button-danger:hover { background: color-mix(in srgb, var(--fox-negative) 82%, black); }
 .delete-card-actions { display: flex; gap: 10px; margin-top: 6px; }
-.delete-card-actions .fox-button { flex: 1; padding: 0 10px; font-size: 11px; }
+.fox-dialog-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex: 1; min-height: 46px; padding: 0 14px; border: 1px solid transparent; border-radius: 12px; cursor: pointer; font-size: 12px; font-weight: 700; font-family: inherit; letter-spacing: .01em; transition: transform .2s ease, background-color .2s ease, border-color .2s ease; }
+.fox-dialog-button:hover { transform: translateY(-1px); }
+.fox-dialog-button-cancel { border-color: var(--fox-border); color: var(--fox-text); background: var(--fox-surface-raised); }
+.fox-dialog-button-cancel:hover { border-color: var(--fox-primary); }
+.fox-dialog-button-danger { color: #fff; background: var(--fox-negative); }
+.fox-dialog-button-danger:hover { background: color-mix(in srgb, var(--fox-negative) 82%, black); }
 .edit-card-hint { display: block; margin-top: -4px; font-size: 10.5px; }
 .add-card-preview-limit { display: grid; gap: 4px; text-align: right; }
 .add-card-preview-limit span { font-size: 10px; font-weight: 700; letter-spacing: .16em; }
@@ -257,21 +260,75 @@
 .rewards-toggle { display: inline-flex; align-items: center; gap: 4px; padding: 8px 12px; border: 1px solid var(--fox-border); border-radius: 999px; color: var(--fox-primary); background: transparent; cursor: pointer; font-size: 11px; font-weight: 700; transition: border-color .2s ease, background-color .2s ease; }
 .rewards-toggle:hover { border-color: var(--fox-primary); background: var(--fox-surface-raised); }
 
-/* ----- Cards: due alert ----- */
-.due-alert { display: flex; gap: 14px; padding: 14px 16px; margin: -6px 0 20px; border: 1px solid rgba(246,201,109,.35); border-left-width: 3px; border-radius: 14px; background: rgba(246,201,109,.08); }
+/* ----- Cards: due alert (collapsible) ----- */
+.due-alert { display: grid; margin: -6px 0 20px; border: 1px solid rgba(246,201,109,.35); border-left-width: 3px; border-radius: 14px; background: rgba(246,201,109,.08); overflow: hidden; transition: border-color .2s ease, background-color .2s ease; }
+.due-alert.is-expanded { border-color: rgba(246,201,109,.6); background: rgba(246,201,109,.11); }
+.due-alert-toggle { display: flex; align-items: center; gap: 14px; width: 100%; padding: 14px 16px; border: 0; color: var(--fox-text); background: transparent; cursor: pointer; text-align: left; transition: background-color .2s ease; }
+.due-alert-toggle:hover { background: rgba(246,201,109,.06); }
+.due-alert-toggle:focus-visible { outline: 2px solid var(--fox-warning); outline-offset: -3px; }
 .due-alert-icon { display: grid; flex: 0 0 auto; place-items: center; width: 36px; height: 36px; border-radius: 11px; color: var(--fox-warning); background: rgba(246,201,109,.16); }
-.due-alert-copy { display: grid; flex: 1; gap: 8px; min-width: 0; }
-.due-alert-copy > strong { font-size: 13px; }
-.due-alert-copy ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.due-alert-row { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: 1px solid rgba(246,201,109,.28); border-radius: 10px; color: var(--fox-text); background: rgba(246,201,109,.06); cursor: pointer; text-align: left; transition: transform .2s ease, background-color .2s ease; }
-.due-alert-row:hover { transform: translateX(2px); background: rgba(246,201,109,.14); }
-.due-alert-row.is-active { border-color: var(--fox-warning); }
-.due-alert-bank { flex: 1; font-size: 12px; font-weight: 600; }
-.due-alert-info { color: var(--fox-warning); font-size: 11px; font-weight: 700; }
+.due-alert-headline { display: flex; flex: 1; flex-direction: column; gap: 4px; min-width: 0; }
+.due-alert-headline > strong { font-size: 13px; }
+.due-alert-hint { color: var(--fox-muted); font-size: 11px; }
+.due-alert-caret { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; color: var(--fox-warning); background: rgba(246,201,109,.12); }
+.due-alert-body { padding: 0 16px 14px; }
+.due-alert-body ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.due-alert-row { display: grid; align-items: center; grid-template-columns: 1fr auto auto; gap: 10px; width: 100%; padding: 10px 12px; border: 1px solid rgba(246,201,109,.32); border-radius: 11px; color: var(--fox-text); background: rgba(246,201,109,.06); cursor: pointer; text-align: left; transition: transform .2s ease, background-color .2s ease, border-color .2s ease; }
+.due-alert-row:hover { transform: translateX(2px); background: rgba(246,201,109,.14); border-color: var(--fox-warning); }
+.due-alert-row.is-active { border-color: var(--fox-warning); background: rgba(246,201,109,.16); }
+.due-alert-bank { font-size: 12px; font-weight: 600; }
+.due-alert-invoice { color: var(--fox-text); font-size: 15px; font-weight: 800; letter-spacing: -.02em; }
+.due-alert-proximity { color: var(--fox-warning); font-size: 11px; font-weight: 700; }
+.due-alert-total { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(246,201,109,.3); color: var(--fox-warning); font-size: 12px; font-weight: 700; }
+.due-alert-total strong { font-size: 15px; letter-spacing: -.02em; }
 
 @media (max-width: 640px) {
   .cards-action-btn { font-size: 11px; padding: 0 8px; }
   .invoice-summary strong { font-size: 17px; }
   .rewards-balance { font-size: 18px; }
 }
+
+
+/* ----- DatePicker (custom, dark + neon accent) ----- */
+.fox-datepicker { position: relative; }
+.fox-datepicker-trigger { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid var(--fox-border); border-radius: 9px; color: var(--fox-text); background: var(--fox-ink); cursor: pointer; font-family: inherit; font-size: 13px; text-align: left; transition: border-color .2s ease, background-color .2s ease; }
+.fox-datepicker-trigger:hover, .fox-datepicker-trigger[aria-expanded="true"] { border-color: var(--fox-primary); background: var(--fox-surface); }
+.fox-datepicker-trigger:focus-visible { outline: 2px solid var(--fox-primary); outline-offset: 2px; }
+.fox-datepicker-trigger svg { color: var(--fox-muted); }
+.fox-datepicker-trigger .is-placeholder { color: var(--fox-dim); }
+.fox-datepicker-popover { position: absolute; top: calc(100% + 8px); left: 0; z-index: 40; width: 288px; padding: 14px; border: 1px solid var(--fox-border); border-radius: 14px; background: var(--fox-surface); box-shadow: 0 16px 40px rgba(0, 0, 0, .34); animation: rise-in .18s both; }
+.fox-datepicker-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 0 4px; }
+.fox-datepicker-header strong { font-size: 13px; font-weight: 700; letter-spacing: -.01em; }
+.fox-datepicker-nav { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid transparent; border-radius: 9px; color: var(--fox-muted); background: transparent; cursor: pointer; transition: border-color .2s ease, color .2s ease, background-color .2s ease; }
+.fox-datepicker-nav:hover, .fox-datepicker-nav:focus-visible { border-color: var(--fox-border); color: var(--fox-primary); background: var(--fox-surface-raised); outline: none; }
+.fox-datepicker-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; padding: 0 2px 6px; color: var(--fox-dim); font-size: 10px; font-weight: 700; text-align: center; letter-spacing: .08em; }
+.fox-datepicker-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.fox-datepicker-cell { display: grid; place-items: center; height: 34px; padding: 0; border: 1px solid transparent; border-radius: 9px; color: var(--fox-text); background: transparent; cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 600; transition: color .18s ease, background-color .18s ease, border-color .18s ease, transform .18s ease; }
+.fox-datepicker-cell.empty { pointer-events: none; }
+.fox-datepicker-cell:hover:not(.empty) { color: var(--fox-primary); background: rgba(80, 227, 194, .12); transform: translateY(-1px); }
+.fox-datepicker-cell.is-today { border-color: var(--fox-primary); }
+.fox-datepicker-cell.is-selected { color: var(--fox-ink); background: var(--fox-primary); border-color: var(--fox-primary); box-shadow: 0 4px 14px rgba(80, 227, 194, .35); }
+.fox-datepicker-cell:focus-visible { outline: 2px solid var(--fox-primary); outline-offset: 2px; }
+.fox-datepicker-footer { display: flex; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--fox-border); }
+.fox-datepicker-quick { flex: 1; padding: 8px 10px; border: 1px solid var(--fox-border); border-radius: 8px; color: var(--fox-primary); background: transparent; cursor: pointer; font-size: 11px; font-weight: 700; font-family: inherit; transition: border-color .2s ease, background-color .2s ease; }
+.fox-datepicker-quick:hover { border-color: var(--fox-primary); background: var(--fox-surface-raised); }
+.fox-datepicker-clear { color: var(--fox-muted); }
+.fox-datepicker-clear:hover { color: var(--fox-negative); border-color: var(--fox-negative); }
+
+/* Field wrapper for non-label containers (BankAutocomplete + DatePicker) */
+.fox-entry-field > .fox-bank-autocomplete, .fox-entry-field > .fox-datepicker { margin-top: 0; }
+
+/* ----- BankAutocomplete ----- */
+.fox-bank-autocomplete { position: relative; }
+.fox-bank-autocomplete-input { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid var(--fox-border); border-radius: 9px; color: var(--fox-muted); background: var(--fox-ink); transition: border-color .2s ease; }
+.fox-bank-autocomplete-input:focus-within { border-color: var(--fox-primary); }
+.fox-bank-autocomplete-input input { flex: 1; min-width: 0; padding: 0; border: 0; outline: 0; color: var(--fox-text); background: transparent; font-size: 13px; font-family: inherit; }
+.fox-bank-autocomplete-input input::placeholder { color: var(--fox-dim); }
+.fox-bank-caret { color: var(--fox-muted); cursor: pointer; transition: transform .2s ease, color .2s ease; }
+.fox-bank-caret.is-open { color: var(--fox-primary); transform: rotate(180deg); }
+.fox-bank-suggestions { position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 30; display: grid; gap: 2px; max-height: 260px; overflow-y: auto; margin: 0; padding: 6px; list-style: none; border: 1px solid var(--fox-border); border-radius: 12px; background: var(--fox-surface); box-shadow: 0 16px 40px rgba(0, 0, 0, .34); animation: rise-in .18s both; }
+.fox-bank-suggestion { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: 0; border-radius: 8px; color: var(--fox-text); background: transparent; cursor: pointer; font-family: inherit; font-size: 12.5px; font-weight: 600; text-align: left; transition: background-color .18s ease, color .18s ease; }
+.fox-bank-suggestion:hover, .fox-bank-suggestion.is-focused { color: var(--fox-primary); background: var(--fox-surface-raised); }
+.fox-bank-swatch { display: grid; flex: 0 0 auto; place-items: center; width: 26px; height: 26px; border-radius: 8px; font-size: 11px; font-weight: 800; letter-spacing: -.02em; }
+.fox-bank-name { flex: 1; }
 

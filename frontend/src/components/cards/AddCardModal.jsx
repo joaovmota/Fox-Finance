@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { CreditCard } from "lucide-react";
 import { Button, Modal } from "@/components/ui/fox";
+import { BankAutocomplete } from "@/components/ui/BankAutocomplete";
 import { getBankTheme, identifyBank } from "@/lib/cardsLogic";
 import { toCents } from "@/lib/money";
 
@@ -16,12 +17,18 @@ const initialForm = {
 function maskDigits(value, max) {
   return String(value).replace(/\D/g, "").slice(0, max);
 }
-
 function maskCurrency(value) {
   const digits = String(value).replace(/\D/g, "");
   if (!digits) return "";
-  const number = Number(digits) / 100;
-  return number.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return (Number(digits) / 100).toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+// Capitaliza a primeira letra de cada palavra sem tocar no restante,
+// preservando dígitos e caracteres já digitados pelo usuário.
+export function capitalizeWords(text) {
+  return String(text).replace(/(^|\s+)([\p{L}])/gu, (_, ws, ch) => `${ws}${ch.toLocaleUpperCase("pt-BR")}`);
 }
 
 export function AddCardModal({ onClose, onSubmit }) {
@@ -85,23 +92,22 @@ export function AddCardModal({ onClose, onSubmit }) {
           Apelido do cartão
           <input
             value={form.apelido}
-            onChange={(event) => update({ apelido: event.target.value })}
+            onChange={(event) => update({ apelido: capitalizeWords(event.target.value) })}
             placeholder="Ex.: Nubank Roxinho, Cartão da Esposa"
             data-testid="new-card-apelido-input"
             required
           />
         </label>
 
-        <label className="fox-entry-field">
+        <div className="fox-entry-field">
           Banco emissor
-          <input
+          <BankAutocomplete
             value={form.bank}
-            onChange={(event) => update({ bank: event.target.value })}
-            placeholder="Ex.: Nubank, Banco Inter, Itaú"
-            data-testid="new-card-bank-input"
+            onChange={(nextValue) => update({ bank: capitalizeWords(nextValue) })}
+            testId="new-card-bank"
             required
           />
-        </label>
+        </div>
 
         <div className="fox-entry-two-columns">
           <label className="fox-entry-field">

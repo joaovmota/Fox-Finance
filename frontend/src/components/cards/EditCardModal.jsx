@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Save } from "lucide-react";
 import { Button, Modal } from "@/components/ui/fox";
+import { BankAutocomplete } from "@/components/ui/BankAutocomplete";
+import { capitalizeWords } from "@/components/cards/AddCardModal";
 import { getBankTheme, identifyBank } from "@/lib/cardsLogic";
 import { formatBRL, toCents } from "@/lib/money";
 
@@ -100,21 +102,21 @@ export function EditCardModal({ card, onClose, onSubmit }) {
           Apelido
           <input
             value={form.apelido}
-            onChange={(event) => update({ apelido: event.target.value })}
+            onChange={(event) => update({ apelido: capitalizeWords(event.target.value) })}
             data-testid="edit-card-apelido-input"
             required
           />
         </label>
 
-        <label className="fox-entry-field">
+        <div className="fox-entry-field">
           Banco emissor
-          <input
+          <BankAutocomplete
             value={form.bank}
-            onChange={(event) => update({ bank: event.target.value })}
-            data-testid="edit-card-bank-input"
+            onChange={(nextValue) => update({ bank: capitalizeWords(nextValue) })}
+            testId="edit-card-bank"
             required
           />
-        </label>
+        </div>
 
         <div className="fox-entry-two-columns">
           <label className="fox-entry-field">

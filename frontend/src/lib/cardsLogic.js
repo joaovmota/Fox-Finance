@@ -1,118 +1,55 @@
 // Business logic for the Cards module. Pure functions, no side effects.
 // Money is treated as integer cents to avoid float drift.
 
-export const bankThemes = {
-  nubank: {
-    label: "Nubank",
-    background: "linear-gradient(135deg, #8A05BE 0%, #6D0AA0 100%)",
-    text: "#ffffff",
-    solid: "#820AD1",
-    softText: "rgba(255,255,255,0.72)",
-    progressTrack: "rgba(255,255,255,0.18)",
-    progressFill: "#ffffff",
-  },
-  inter: {
-    label: "Banco Inter",
-    background: "linear-gradient(135deg, #FF8A2B 0%, #E15A00 100%)",
-    text: "#ffffff",
-    solid: "#FF7A00",
-    softText: "rgba(255,255,255,0.78)",
-    progressTrack: "rgba(255,255,255,0.22)",
-    progressFill: "#ffffff",
-  },
-  bb: {
-    label: "Banco do Brasil",
-    background: "linear-gradient(135deg, #FFDF00 0%, #E8C500 100%)",
-    text: "#0d2a5c",
-    solid: "#FFDF00",
-    softText: "rgba(13,42,92,0.72)",
-    progressTrack: "rgba(13,42,92,0.18)",
-    progressFill: "#0d2a5c",
-  },
-  xp: {
-    label: "XP Investimentos",
-    background: "linear-gradient(135deg, #202b52 0%, #0d1735 100%)",
-    text: "#ffffff",
-    solid: "#0F1B3D",
-    softText: "rgba(255,255,255,0.7)",
-    progressTrack: "rgba(255,255,255,0.14)",
-    progressFill: "#ffffff",
-  },
-  c6: {
-    label: "C6 Bank",
-    background: "linear-gradient(135deg, #303030 0%, #050505 100%)",
-    text: "#ffffff",
-    solid: "#000000",
-    softText: "rgba(255,255,255,0.66)",
-    progressTrack: "rgba(255,255,255,0.16)",
-    progressFill: "#ffffff",
-  },
-  itau: {
-    label: "Itaú",
-    background: "linear-gradient(135deg, #EC7000 0%, #003399 100%)",
-    text: "#ffffff",
-    solid: "#EC7000",
-    softText: "rgba(255,255,255,0.72)",
-    progressTrack: "rgba(255,255,255,0.2)",
-    progressFill: "#ffffff",
-  },
-  santander: {
-    label: "Santander",
-    background: "linear-gradient(135deg, #EC0000 0%, #900000 100%)",
-    text: "#ffffff",
-    solid: "#EC0000",
-    softText: "rgba(255,255,255,0.72)",
-    progressTrack: "rgba(255,255,255,0.2)",
-    progressFill: "#ffffff",
-  },
-  bradesco: {
-    label: "Bradesco",
-    background: "linear-gradient(135deg, #CC092F 0%, #7A0518 100%)",
-    text: "#ffffff",
-    solid: "#CC092F",
-    softText: "rgba(255,255,255,0.72)",
-    progressTrack: "rgba(255,255,255,0.2)",
-    progressFill: "#ffffff",
-  },
-  caixa: {
-    label: "Caixa",
-    background: "linear-gradient(135deg, #005CA9 0%, #003060 100%)",
-    text: "#ffffff",
-    solid: "#005CA9",
-    softText: "rgba(255,255,255,0.72)",
-    progressTrack: "rgba(255,255,255,0.2)",
-    progressFill: "#ffffff",
-  },
-  generic: {
-    label: "Cartão",
-    background: "linear-gradient(135deg, #1c3f42 0%, #0a1e20 100%)",
-    text: "#ffffff",
-    solid: "#173638",
-    softText: "rgba(255,255,255,0.68)",
-    progressTrack: "rgba(255,255,255,0.16)",
-    progressFill: "#50e3c2",
-  },
-};
+import { banks, GENERIC_BANK, findBank } from "@/lib/banks";
 
-const BANK_PATTERNS = [
-  { key: "nubank", tests: [/\bnu\b/i, /nubank/i] },
-  { key: "inter", tests: [/inter/i] },
-  { key: "bb", tests: [/banco do brasil/i, /\bbb\b/i] },
-  { key: "xp", tests: [/xp/i, /rico/i] },
-  { key: "c6", tests: [/c6/i] },
-  { key: "itau", tests: [/ita[uú]/i] },
-  { key: "santander", tests: [/santander/i] },
-  { key: "bradesco", tests: [/bradesco/i] },
-  { key: "caixa", tests: [/caixa/i] },
-];
+/**
+ * Convert a hex/rgb color to `rgba()` with the given alpha, so we can derive
+ * translucent progress tracks and softened text tones out of `corTexto`.
+ */
+function withAlpha(color, alpha) {
+  if (!color) return `rgba(255,255,255,${alpha})`;
+  const trimmed = color.trim();
+  if (trimmed.startsWith("#")) {
+    const hex = trimmed.slice(1);
+    const normalized = hex.length === 3 ? hex.split("").map((c) => c + c).join("") : hex;
+    const num = parseInt(normalized, 16);
+    const r = (num >> 16) & 255;
+    const g = (num >> 8) & 255;
+    const b = num & 255;
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
+  return trimmed;
+}
+
+/**
+ * Convert a bank entry (`{ cor, corTexto, ... }`) into the theme object the
+ * card visuals consume. A single source of truth: change `banks.js` and every
+ * card automatically follows.
+ */
+function themeFromBank(bank) {
+  return {
+    id: bank.id,
+    label: bank.nome,
+    solid: bank.cor,
+    background: `linear-gradient(135deg, ${bank.cor} 0%, color-mix(in srgb, ${bank.cor} 78%, black) 100%)`,
+    text: bank.corTexto,
+    softText: withAlpha(bank.corTexto, 0.72),
+    progressTrack: withAlpha(bank.corTexto, 0.18),
+    progressFill: bank.corTexto,
+  };
+}
+
+// Keep the bankThemes export so existing callers (RewardsCard tone, tests, etc.)
+// continue to resolve without changes. Derived once from the JSON catalogue.
+export const bankThemes = Object.fromEntries([
+  ...banks.map((bank) => [bank.id, themeFromBank(bank)]),
+  ["generic", themeFromBank(GENERIC_BANK)],
+]);
 
 export function identifyBank(input = "") {
-  const value = String(input).trim();
-  if (!value) return "generic";
-  for (const bank of BANK_PATTERNS) {
-    if (bank.tests.some((pattern) => pattern.test(value))) return bank.key;
-  }
-  return "generic";
+  const match = findBank(input);
+  return match ? match.id : "generic";
 }
 
 export function getBankTheme(brandKey) {
